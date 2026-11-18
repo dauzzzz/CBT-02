@@ -1,4 +1,3 @@
-
 aplikasi_simulasi_tka_anbk_pusmendik.html
 100%
 <!DOCTYPE html>
@@ -25,6 +24,9 @@ aplikasi_simulasi_tka_anbk_pusmendik.html
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- SheetJS (Library Impor & Ekspor Excel .xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <!-- Supabase JS CDN (UMD) -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -321,6 +323,9 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
     editingSoalId: null,
     builderJenisSoal: 'PG',
     showImportSiswaModal: false,
+    showImportSoalModal: false,
+    parsedExcelSoalRows: [],
+    importSoalMode: 'auto',
 
     // Filter Rekap Hasil
     filterHasilMapelId: '',
@@ -2944,9 +2949,115 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                 <i class="fa-solid fa-plus"></i>
                 <span>Buat Stimulus Baru</span>
               </button>
+              <button
+                onclick="window.app.toggleImportSoalModal(true)"
+                class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs transition"
+                title="Impor Bank Soal & Stimulus dari Excel (.xlsx)"
+              >
+                <i class="fa-solid fa-file-excel"></i>
+                <span>Impor Soal Excel</span>
+              </button>
+              <button
+                onclick="window.app.exportMapelSoalToExcel('${mapel.id}')"
+                class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition"
+                title="Backup / Ekspor Soal Mapel Ini ke Excel"
+              >
+                <i class="fa-solid fa-download"></i>
+                <span>Ekspor Excel</span>
+              </button>
             </div>
           </div>
         </div>
+
+        <!-- MODAL IMPOR SOAL DARI EXCEL (.XLSX) -->
+        ${state.showImportSoalModal ? `
+          <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6 space-y-4 border border-slate-200">
+              <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-base">
+                    <i class="fa-solid fa-file-excel"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-800 text-sm">Impor Bank Soal & Stimulus dari Excel (.xlsx)</h3>
+                    <p class="text-[11px] text-slate-500">Mata Ujian: <strong>${mapel.nama_mapel}</strong></p>
+                  </div>
+                </div>
+                <button onclick="window.app.toggleImportSoalModal(false)" class="text-slate-400 hover:text-slate-700">
+                  <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+              </div>
+
+              <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div>
+                  <div class="font-bold text-blue-900">1. Unduh Format Template Excel Resmi</div>
+                  <p class="text-[11px] text-blue-700">Berisi contoh kolom Wacana Stimulus, PG Biasa (PG), PG Kompleks (PGK), dan Benar/Salah (BS).</p>
+                </div>
+                <button
+                  type="button"
+                  onclick="window.app.downloadTemplateSoalExcel()"
+                  class="bg-[#0066FF] hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-xs shrink-0"
+                >
+                  <i class="fa-solid fa-download"></i>
+                  <span>Unduh Template .xlsx</span>
+                </button>
+              </div>
+
+              <div class="space-y-3 text-xs">
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">2. Mode Pengelompokan Stimulus:</label>
+                  <select
+                    id="import-soal-mode"
+                    onchange="window.app.setImportSoalMode(this.value)"
+                    class="w-full px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium"
+                  >
+                    <option value="auto" ${state.importSoalMode === 'auto' ? 'selected' : ''}>Otomatis Buat / Kelompokkan sesuai kolom "Judul_Stimulus" di Excel (Direkomendasikan)</option>
+                    <option value="active" ${state.importSoalMode === 'active' ? 'selected' : ''}>Masukkan semua soal ke Stimulus yang sedang aktif saat ini (${activeStimulus ? activeStimulus.judul : 'Buat Stimulus Baru'})</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block font-semibold text-slate-700 mb-1">3. Pilih File Excel (.xlsx / .xls):</label>
+                  <input
+                    type="file"
+                    accept=".xlsx,.xls"
+                    onchange="window.app.handleSoalExcelFileSelect(event)"
+                    class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-800 hover:file:bg-amber-100 border border-slate-200 rounded-xl p-1.5"
+                  />
+                </div>
+
+                ${state.parsedExcelSoalRows.length > 0 ? `
+                  <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900">
+                    <div class="font-bold flex items-center gap-1.5">
+                      <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                      <span>Terdeteksi ${state.parsedExcelSoalRows.length} Baris Butir Soal Siap Diimpor!</span>
+                    </div>
+                    <p class="text-[11px] text-emerald-700 mt-0.5">Klik tombol "Proses Impor Soal ke Mapel Ini" di bawah untuk menyimpan seluruh soal dan stimulus.</p>
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 text-xs">
+                <button
+                  type="button"
+                  onclick="window.app.toggleImportSoalModal(false)"
+                  class="px-4 py-2 rounded-xl text-slate-600 hover:bg-slate-100 font-semibold"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onclick="window.app.processImportSoalExcel('${mapel.id}')"
+                  ${state.parsedExcelSoalRows.length === 0 ? 'disabled' : ''}
+                  class="bg-emerald-600 disabled:bg-slate-300 hover:bg-emerald-700 text-white px-5 py-2 rounded-xl font-semibold shadow-sm transition flex items-center gap-1.5"
+                >
+                  <i class="fa-solid fa-cloud-arrow-up"></i>
+                  <span>Proses Impor Soal ke Mapel Ini</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ` : ''}
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
           <!-- KOLOM KIRI (6 KOLOM): RICH TEXT EDITOR STIMULUS -->
@@ -4557,6 +4668,275 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
       if (state.editingSoalId === id) state.editingSoalId = null;
       showToast('Butir soal dihapus', 'info');
       render();
+    },
+
+    // ================= IMPOR & EKSPOR SOAL DARI EXCEL (.XLSX) =================
+    toggleImportSoalModal(show) {
+      state.showImportSoalModal = show;
+      if (!show) {
+        state.parsedExcelSoalRows = [];
+      }
+      render();
+    },
+
+    setImportSoalMode(mode) {
+      state.importSoalMode = mode;
+    },
+
+    downloadTemplateSoalExcel() {
+      if (!window.XLSX) {
+        return showToast('Library Excel (SheetJS) belum termuat, periksa koneksi internet Anda.', 'error');
+      }
+      const rows = [
+        {
+          No_Urut: 1,
+          Judul_Stimulus: 'AKU',
+          Isi_Wacana: 'Aku adalah siswa kelas 6 di SDN Gedongboyountung yang gemar membaca buku di perpustakaan.',
+          URL_Gambar_Stimulus: '',
+          Jenis_Soal: 'PG',
+          Pertanyaan: 'Di manakah tokoh Aku gemar membaca buku?',
+          Opsi_A: 'Perpustakaan',
+          Opsi_B: 'Kantin',
+          Opsi_C: 'Lapangan',
+          Opsi_D: 'Taman Kota',
+          Opsi_E: '',
+          Kunci_Jawaban: 'A',
+          Bobot: 10
+        },
+        {
+          No_Urut: 2,
+          Judul_Stimulus: 'AKU',
+          Isi_Wacana: '',
+          URL_Gambar_Stimulus: '',
+          Jenis_Soal: 'PGK',
+          Pertanyaan: 'Manakah pernyataan yang sesuai dengan karakter tokoh Aku? (Jawaban benar lebih dari satu)',
+          Opsi_A: 'Gemar membaca buku',
+          Opsi_B: 'Siswa kelas 6',
+          Opsi_C: 'Malas belajar',
+          Opsi_D: 'Sering terlambat',
+          Opsi_E: '',
+          Kunci_Jawaban: 'A,B',
+          Bobot: 10
+        },
+        {
+          No_Urut: 3,
+          Judul_Stimulus: 'KEBERSIHAN SEKOLAH',
+          Isi_Wacana: 'Setiap hari Jumat, warga sekolah mengadakan kegiatan Jumat Bersih agar lingkungan tetap sehat dan nyaman.',
+          URL_Gambar_Stimulus: '',
+          Jenis_Soal: 'BS',
+          Pertanyaan: 'Tentukan Benar (B) atau Salah (S) untuk setiap pernyataan berikut!',
+          Opsi_A: 'Kegiatan Jumat Bersih dilakukan setiap hari Senin',
+          Opsi_B: 'Seluruh warga sekolah ikut serta dalam Jumat Bersih',
+          Opsi_C: 'Lingkungan bersih membuat belajar menjadi nyaman',
+          Opsi_D: '',
+          Opsi_E: '',
+          Kunci_Jawaban: 'S,B,B',
+          Bobot: 10
+        }
+      ];
+
+      const ws = window.XLSX.utils.json_to_sheet(rows);
+      ws['!cols'] = [
+        { wch: 8 }, { wch: 22 }, { wch: 45 }, { wch: 25 },
+        { wch: 12 }, { wch: 45 }, { wch: 25 }, { wch: 25 },
+        { wch: 25 }, { wch: 25 }, { wch: 18 }, { wch: 15 }, { wch: 8 }
+      ];
+      const wb = window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb, ws, 'Template_Soal');
+      window.XLSX.writeFile(wb, 'Template_Impor_Soal_PUSMENDIK.xlsx');
+      showToast('Template Excel (.xlsx) berhasil diunduh!', 'success');
+    },
+
+    handleSoalExcelFileSelect(e) {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      if (!window.XLSX) {
+        return showToast('Library Excel belum siap!', 'error');
+      }
+
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = new Uint8Array(ev.target.result);
+          const workbook = window.XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const json = window.XLSX.utils.sheet_to_json(sheet, { defval: '' });
+
+          const validRows = json.filter(r => {
+            const q = String(r.Pertanyaan || r['Pertanyaan Pokok Soal'] || r.Soal || '').trim();
+            return q.length > 0;
+          });
+
+          if (validRows.length === 0) {
+            showToast('Tidak ditemukan baris pertanyaan yang valid di dalam file Excel!', 'warning');
+            return;
+          }
+
+          state.parsedExcelSoalRows = validRows;
+          showToast(`Berhasil membaca ${validRows.length} butir soal dari Excel.`, 'info');
+          render();
+        } catch (err) {
+          showToast('Gagal membaca file Excel: ' + err.message, 'error');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    },
+
+    async processImportSoalExcel(mapelId) {
+      if (!state.parsedExcelSoalRows.length) return;
+      const rows = state.parsedExcelSoalRows;
+      const mode = state.importSoalMode || 'auto';
+
+      let currentNomor = state.soalList.filter(s => s.mapel_id === mapelId).length;
+      const stimulusCacheByTitle = {};
+
+      state.stimulusList
+        .filter(st => st.mapel_id === mapelId)
+        .forEach(st => {
+          stimulusCacheByTitle[st.judul.trim().toLowerCase()] = st;
+        });
+
+      try {
+        let importedCount = 0;
+
+        for (let i = 0; i < rows.length; i++) {
+          const r = rows[i];
+          const pertanyaan = String(r.Pertanyaan || r['Pertanyaan Pokok Soal'] || r.Soal || '').trim();
+          if (!pertanyaan) continue;
+
+          currentNomor += 1;
+          const nomorUrut = Number(r.No_Urut || r.Nomor || r.No) || currentNomor;
+
+          let rawJenis = String(r.Jenis_Soal || r['Jenis Soal'] || r.Tipe || 'PG').trim().toUpperCase();
+          let jenisSoal = 'PG';
+          if (rawJenis.includes('PGK') || rawJenis.includes('KOMPLEKS')) jenisSoal = 'PGK';
+          else if (rawJenis.includes('BS') || rawJenis.includes('BENAR')) jenisSoal = 'BS';
+
+          const bobot = Number(r.Bobot || r['Bobot Poin']) || 10;
+          const opsiA = String(r.Opsi_A || r['Opsi A'] || r.Pernyataan_1 || '').trim();
+          const opsiB = String(r.Opsi_B || r['Opsi B'] || r.Pernyataan_2 || '').trim();
+          const opsiC = String(r.Opsi_C || r['Opsi C'] || r.Pernyataan_3 || '').trim();
+          const opsiD = String(r.Opsi_D || r['Opsi D'] || r.Pernyataan_4 || '').trim();
+          const opsiE = String(r.Opsi_E || r['Opsi E'] || r.Pernyataan_5 || '').trim();
+          const kunci = String(r.Kunci_Jawaban || r['Kunci Jawaban'] || r.Kunci || 'A')
+            .trim()
+            .toUpperCase();
+
+          let targetStimulus = null;
+
+          if (mode === 'active' && state.selectedStimulusIdForBuilder) {
+            targetStimulus = state.stimulusList.find(st => st.id === state.selectedStimulusIdForBuilder) || null;
+          }
+
+          if (!targetStimulus) {
+            const judulExcel = String(r.Judul_Stimulus || r['Judul Stimulus'] || 'Stimulus Impor').trim() || 'Stimulus Impor';
+            const wacanaExcel = String(r.Isi_Wacana || r['Isi Wacana'] || r.Wacana || '').trim();
+            const gambarExcel = String(r.URL_Gambar_Stimulus || r['URL Gambar'] || '').trim();
+            const keyLower = judulExcel.toLowerCase();
+
+            if (stimulusCacheByTitle[keyLower]) {
+              targetStimulus = stimulusCacheByTitle[keyLower];
+            } else {
+              const stimPayload = {
+                mapel_id: mapelId,
+                judul: judulExcel,
+                konten_teks: wacanaExcel ? `<p>${wacanaExcel.replace(/\n/g, '</p><p>')}</p>` : '<p>-</p>',
+                gambar_url: gambarExcel
+              };
+
+              if (IS_PREVIEW) {
+                const newStim = { id: 'stim-' + Date.now() + '-' + i, ...stimPayload };
+                state.stimulusList.push(newStim);
+                targetStimulus = newStim;
+              } else {
+                const { data: createdStim, error: stimErr } = await supabase
+                  .from('stimulus')
+                  .insert([stimPayload])
+                  .select()
+                  .single();
+                if (stimErr) throw stimErr;
+                targetStimulus = createdStim;
+              }
+              stimulusCacheByTitle[keyLower] = targetStimulus;
+            }
+          }
+
+          const soalPayload = {
+            mapel_id: mapelId,
+            stimulus_id: targetStimulus.id,
+            nomor_urut: nomorUrut,
+            jenis_soal: jenisSoal,
+            bobot,
+            pertanyaan,
+            opsi_a: opsiA,
+            opsi_b: opsiB,
+            opsi_c: opsiC,
+            opsi_d: opsiD,
+            opsi_e: opsiE,
+            kunci_jawaban: kunci
+          };
+
+          if (IS_PREVIEW) {
+            state.soalList.push({ id: 'soal-' + Date.now() + '-' + i, ...soalPayload });
+          } else {
+            const { error: soalErr } = await supabase.from('soal').insert([soalPayload]);
+            if (soalErr) throw soalErr;
+          }
+
+          importedCount += 1;
+          state.selectedStimulusIdForBuilder = targetStimulus.id;
+        }
+
+        if (!IS_PREVIEW && supabase) {
+          await fetchAllDatabase();
+        }
+
+        state.showImportSoalModal = false;
+        state.parsedExcelSoalRows = [];
+        showToast(`Berhasil mengimpor ${importedCount} butir soal dari Excel!`, 'success');
+        render();
+      } catch (err) {
+        showToast('Gagal mengimpor soal ke database: ' + err.message, 'error');
+      }
+    },
+
+    exportMapelSoalToExcel(mapelId) {
+      if (!window.XLSX) {
+        return showToast('Library Excel belum siap!', 'error');
+      }
+      const mapel = state.mapelList.find(m => m.id === mapelId);
+      const soals = getExamQuestionsForMapel(mapelId);
+      if (soals.length === 0) {
+        return showToast('Belum ada butir soal pada mata ujian ini untuk diekspor!', 'warning');
+      }
+
+      const rows = soals.map((q, idx) => {
+        const st = state.stimulusList.find(s => s.id === q.stimulus_id);
+        const plainWacana = (st?.konten_teks || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+        return {
+          No_Urut: q.nomor_urut || (idx + 1),
+          Judul_Stimulus: st ? st.judul : 'Stimulus Umum',
+          Isi_Wacana: plainWacana,
+          URL_Gambar_Stimulus: st?.gambar_url || '',
+          Jenis_Soal: q.jenis_soal,
+          Pertanyaan: q.pertanyaan,
+          Opsi_A: q.opsi_a || '',
+          Opsi_B: q.opsi_b || '',
+          Opsi_C: q.opsi_c || '',
+          Opsi_D: q.opsi_d || '',
+          Opsi_E: q.opsi_e || '',
+          Kunci_Jawaban: q.kunci_jawaban,
+          Bobot: q.bobot || 10
+        };
+      });
+
+      const ws = window.XLSX.utils.json_to_sheet(rows);
+      const wb = window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb, ws, 'Bank_Soal');
+      const safeKode = (mapel?.kode_mapel || 'TKA').replace(/[^a-zA-Z0-9_-]/g, '_');
+      window.XLSX.writeFile(wb, `Bank_Soal_${safeKode}.xlsx`);
+      showToast('Bank soal berhasil diekspor ke Excel!', 'success');
     },
 
     // FILTER & CETAK REKAP HASIL UJIAN
