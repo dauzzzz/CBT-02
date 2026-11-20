@@ -1,5 +1,3 @@
-aplikasi_simulasi_tka_anbk_pusmendik.html
-100%
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -267,7 +265,7 @@ aplikasi_simulasi_tka_anbk_pusmendik.html
         <i class="fa-solid fa-user-graduate mr-1 text-blue-600"></i> Quick Login Siswa
       </button>
       <button onclick="window.app.quickExamDirect()" class="bg-blue-700 hover:bg-blue-800 text-white px-2.5 py-1 rounded shadow-sm transition text-xs font-bold">
-        <i class="fa-solid fa-laptop-code mr-1"></i> Langsung Layar Ujian (4 Soal / 2 Stimulus)
+        <i class="fa-solid fa-laptop-code mr-1"></i> Langsung Layar Ujian (5 Soal / 2 Stimulus)
       </button>
       <button onclick="window.app.quickLoginAdmin()" class="bg-slate-900 hover:bg-slate-800 text-white px-2.5 py-1 rounded shadow-sm transition text-xs font-bold">
         <i class="fa-solid fa-user-shield mr-1 text-amber-400"></i> Quick Login Admin
@@ -295,11 +293,12 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
     : null;
 
   // Aset SVG Lokal (Tanpa request jaringan eksternal yang membuat favicon berputar)
-  const DEFAULT_LOGO_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpolygon points='60,6 110,32 92,98 28,98 10,32' fill='%230055A5' stroke='%23FFD700' stroke-width='4'/%3E%3Ccircle cx='60' cy='56' r='30' fill='%23ffffff'/%3E%3Cpath d='M60 32L32 46l28 14 28-14-28-14zm-18 21v14c0 6 8 11 18 11s18-5 18-11V53l-18 9-18-9z' fill='%231E6091'/%3E%3C/svg%3E";
+  // Menggunakan %22 agar tidak memotong tanda petik tunggal di dalam atribut onerror="..."
+  const DEFAULT_LOGO_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 120%22%3E%3Cpolygon points=%2260,6 110,32 92,98 28,98 10,32%22 fill=%22%230055A5%22 stroke=%22%23FFD700%22 stroke-width=%224%22/%3E%3Ccircle cx=%2260%22 cy=%2256%22 r=%2230%22 fill=%22%23ffffff%22/%3E%3Cpath d=%22M60 32L32 46l28 14 28-14-28-14zm-18 21v14c0 6 8 11 18 11s18-5 18-11V53l-18 9-18-9z%22 fill=%22%231E6091%22/%3E%3C/svg%3E";
 
-  const DEFAULT_STIMULUS_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 280'%3E%3Crect width='760' height='280' fill='%2368B5E8'/%3E%3Crect x='40' y='40' width='90' height='240' fill='%23CBD5E1' stroke='%23475569' stroke-width='3'/%3E%3Crect x='240' y='130' width='480' height='150' fill='%23334155'/%3E%3Crect x='265' y='155' width='220' height='125' fill='%2394A3B8'/%3E%3Cpath d='M560 280 L630 165 L695 280 Z' fill='none' stroke='%23F59E0B' stroke-width='6'/%3E%3Ctext x='285' y='110' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold'%3EILUSTRASI PROYEK RENOVASI GEDUNG (BISA DI-SCROLL)%3C/text%3E%3C/svg%3E";
+  const DEFAULT_STIMULUS_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 760 280%22%3E%3Crect width=%22760%22 height=%22280%22 fill=%22%2368B5E8%22/%3E%3Crect x=%2240%22 y=%2240%22 width=%2290%22 height=%22240%22 fill=%22%23CBD5E1%22 stroke=%22%23475569%22 stroke-width=%223%22/%3E%3Crect x=%22240%22 y=%22130%22 width=%22480%22 height=%22150%22 fill=%22%23334155%22/%3E%3Crect x=%22265%22 y=%22155%22 width=%22220%22 height=%22125%22 fill=%22%2394A3B8%22/%3E%3Cpath d=%22M560 280 L630 165 L695 280 Z%22 fill=%22none%22 stroke=%22%23F59E0B%22 stroke-width=%226%22/%3E%3Ctext x=%22285%22 y=%22110%22 fill=%22%23ffffff%22 font-family=%22sans-serif%22 font-size=%2218%22 font-weight=%22bold%22%3EILUSTRASI PROYEK RENOVASI GEDUNG (BISA DI-SCROLL)%3C/text%3E%3C/svg%3E";
 
-  const SECOND_STIMULUS_SVG = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 260'%3E%3Crect width='760' height='260' fill='%23E0F2FE'/%3E%3Crect y='175' width='760' height='85' fill='%2364748B'/%3E%3Cline x1='580' y1='85' x2='580' y2='260' stroke='%23EF4444' stroke-width='7'/%3E%3Crect x='580' y='85' width='120' height='36' fill='%23EF4444'/%3E%3Ctext x='595' y='108' fill='%23ffffff' font-family='sans-serif' font-size='16' font-weight='bold'%3EFINISH LINE%3C/text%3E%3Ccircle cx='280' cy='125' r='18' fill='%230284C7'/%3E%3Cpath d='M280 143 L280 190 L250 225 M280 190 L310 225 M250 160 L310 160' stroke='%230284C7' stroke-width='7' stroke-linecap='round' fill='none'/%3E%3C/svg%3E";
+  const SECOND_STIMULUS_SVG = "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 760 260%22%3E%3Crect width=%22760%22 height=%22260%22 fill=%22%23E0F2FE%22/%3E%3Crect y=%22175%22 width=%22760%22 height=%2285%22 fill=%22%2364748B%22/%3E%3Cline x1=%22580%22 y1=%2285%22 x2=%22580%22 y2=%22260%22 stroke=%22%23EF4444%22 stroke-width=%227%22/%3E%3Crect x=%22580%22 y=%2285%22 width=%22120%22 height=%2236%22 fill=%22%23EF4444%22/%3E%3Ctext x=%22595%22 y=%22108%22 fill=%22%23ffffff%22 font-family=%22sans-serif%22 font-size=%2216%22 font-weight=%22bold%22%3EFINISH LINE%3C/text%3E%3Ccircle cx=%22280%22 cy=%22125%22 r=%2218%22 fill=%22%230284C7%22/%3E%3Cpath d=%22M280 143 L280 190 L250 225 M280 190 L310 225 M250 160 L310 160%22 stroke=%22%230284C7%22 stroke-width=%227%22 stroke-linecap=%22round%22 fill=%22none%22/%3E%3C/svg%3E";
 
   // ============================================================================
   // STATE UTAMA APLIKASI
@@ -512,6 +511,21 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
         opsi_d: 'Memberikan dukungan positif kepada sesama peserta.',
         opsi_e: '',
         kunci_jawaban: 'A,B,D',
+        bobot: 25
+      },
+      {
+        id: 'soal-5',
+        mapel_id: 'mapel-1',
+        stimulus_id: 'stim-2',
+        nomor_urut: 5,
+        jenis_soal: 'MJ',
+        pertanyaan: 'Pasangkan unsur cerita "Kisah Pelari Maraton Terakhir" di lajur kiri dengan keterangan yang tepat di lajur kanan!',
+        opsi_a: 'Pelari berusia lanjut || Tetap melangkah tenang hingga garis finis',
+        opsi_b: 'Panitia perlombaan || Tetap menyalakan lampu di garis finis',
+        opsi_c: 'Penonton di arena || Berdiri memberikan tepuk tangan meriah',
+        opsi_d: '',
+        opsi_e: '',
+        kunci_jawaban: 'A,B,C',
         bobot: 25
       }
     ];
@@ -1196,7 +1210,8 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
     const badgeJenisMap = {
       PG: { text: 'Pilihan Ganda Biasa', cls: 'bg-blue-50 text-blue-700' },
       PGK: { text: 'Pilihan Ganda Kompleks (Kotak Ceklis > 1 Jawaban)', cls: 'bg-purple-100 text-purple-700' },
-      BS: { text: 'Benar / Salah (Multi Pernyataan)', cls: 'bg-emerald-100 text-emerald-700' }
+      BS: { text: 'Benar / Salah (Multi Pernyataan)', cls: 'bg-emerald-100 text-emerald-700' },
+      MJ: { text: 'Menjodohkan (Pasangkan Pernyataan)', cls: 'bg-amber-100 text-amber-800' }
     };
     const badgeInfo = badgeJenisMap[currentSoal.jenis_soal] || badgeJenisMap.PG;
 
@@ -1341,6 +1356,62 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                         </tbody>
                       </table>
                     </div>
+                  ` : currentSoal.jenis_soal === 'MJ' ? `
+                    <p class="text-[#0000FF] font-normal mb-4 ${fontSizeClass}">
+                      Pasangkan setiap <strong class="font-bold">Pernyataan (Premis)</strong> di sebelah kiri dengan <strong class="font-bold">Pasangan Jawaban</strong> yang tepat di sebelah kanan!
+                    </p>
+                    ${(() => {
+                      const mjRows = options.map(opt => {
+                        const parts = String(opt.text).split('||');
+                        return {
+                          key: opt.key,
+                          kiri: (parts[0] || '').trim(),
+                          kanan: (parts[1] || '').trim()
+                        };
+                      });
+
+                      const mjPairs = mjRows.filter(p => p.kiri !== '');
+                      const kananOptions = mjRows
+                        .filter(p => p.kanan !== '')
+                        .map(p => ({ code: p.key, label: p.kanan }));
+
+                      const currentMap = (savedAns && typeof savedAns === 'object' && !Array.isArray(savedAns)) ? savedAns : {};
+
+                      return `
+                        <div class="space-y-3">
+                          <div class="grid grid-cols-1 md:grid-cols-12 gap-2.5 items-center bg-[#F8F9FA] px-3.5 py-2.5 rounded-xl border border-slate-200 font-semibold text-slate-700 text-xs">
+                            <div class="md:col-span-6">Lajur Kiri (Pernyataan / Soal)</div>
+                            <div class="md:col-span-6">Lajur Kanan (Pilih Pasangan Jawaban)</div>
+                          </div>
+
+                          ${mjPairs.map((pair, idx) => {
+                            const selectedCode = currentMap[pair.key] || '';
+                            return `
+                              <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center p-3 rounded-xl border ${selectedCode ? 'border-blue-400 bg-blue-50/30' : 'border-slate-200 bg-white'} transition">
+                                <div class="md:col-span-6 flex items-start gap-2.5">
+                                  <span class="w-6 h-6 rounded-full bg-slate-800 text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                                  <span class="text-slate-800 leading-relaxed">${pair.kiri}</span>
+                                </div>
+                                <div class="md:col-span-1 hidden md:flex justify-center text-slate-400">
+                                  <i class="fa-solid fa-arrows-left-right text-blue-600"></i>
+                                </div>
+                                <div class="md:col-span-5">
+                                  <select
+                                    onchange="window.app.selectMJAnswer('${currentSoal.id}', '${pair.key}', this.value)"
+                                    class="w-full px-3 py-2.5 rounded-xl border-2 ${selectedCode ? 'border-blue-600 bg-blue-50/60 text-blue-900 font-semibold' : 'border-slate-300 bg-white text-slate-700'} text-xs focus:outline-none focus:border-blue-600 cursor-pointer"
+                                  >
+                                    <option value="">-- Pilih Pasangan --</option>
+                                    ${kananOptions.map(ko => `
+                                      <option value="${ko.code}" ${selectedCode === ko.code ? 'selected' : ''}>${ko.code}. ${ko.label}</option>
+                                    `).join('')}
+                                  </select>
+                                </div>
+                              </div>
+                            `;
+                          }).join('')}
+                        </div>
+                      `;
+                    })()}
                   ` : `
                     ${currentSoal.jenis_soal === 'PGK' ? `
                       <div class="text-xs font-semibold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-2 rounded-lg mb-3 flex items-center gap-2">
@@ -1489,7 +1560,9 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                     ? 'Pilihan Ganda Kompleks (Kotak Ceklis > 1 jawaban)'
                     : currentSoal.jenis_soal === 'BS'
                       ? 'Benar / Salah Multi Pernyataan'
-                      : 'Pilihan Ganda Biasa (1 jawaban benar)'
+                      : currentSoal.jenis_soal === 'MJ'
+                        ? 'Menjodohkan (Memasangkan Pernyataan Kiri & Kanan)'
+                        : 'Pilihan Ganda Biasa (1 jawaban benar)'
                 }</p>
                 <p><strong>Bobot Nilai:</strong> ${currentSoal.bobot || 10} Poin</p>
               </div>
@@ -2548,13 +2621,13 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                       `}
                     </td>
                     <td class="py-2.5 px-2 text-right space-x-1 whitespace-nowrap">
-                      <button onclick="window.app.startEditSiswa('${s.id}')" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-medium">
+                      <button onclick="window.app.startEditSiswa('${s.id}')" class="bg-amber-50 text-amber-600 hover:bg-amber-100 px-2.5 py-1 rounded-lg font-medium" title="Edit Peserta">
                         <i class="fa-solid fa-pen-to-square mr-1"></i>Edit
                       </button>
-                      <button onclick="window.app.cetakSatuKartu('${s.id}')" class="bg-emerald-50 text-emerald-600 hover:bg-emerald-100 px-2.5 py-1 rounded-lg font-medium transition">
+                      <button onclick="window.app.cetakSatuKartu('${s.id}')" class="bg-emerald-50 text-emerald-700 hover:bg-emerald-100 px-2.5 py-1 rounded-lg font-medium" title="Cetak Kartu Peserta">
                         <i class="fa-solid fa-id-card mr-1"></i>Kartu
                       </button>
-                      <button onclick="window.app.deleteSiswa('${s.id}')" class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-2.5 py-1 rounded-lg">
+                      <button onclick="window.app.deleteSiswa('${s.id}')" class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-2.5 py-1 rounded-lg" title="Hapus Peserta">
                         <i class="fa-solid fa-trash"></i>
                       </button>
                     </td>
@@ -2565,14 +2638,19 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
           </table>
         </div>
 
-        <!-- MODAL IMPORT DATA SISWA (CSV / COPY-PASTE EXCEL) -->
+        <!-- MODAL IMPORT DATA SISWA (EXCEL .XLSX / CSV / COPY-PASTE) -->
         ${state.showImportSiswaModal ? `
           <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
             <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full p-6">
               <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-4">
-                <div>
-                  <h3 class="font-bold text-slate-800 text-base">Import Data Siswa Massal (CSV / Excel)</h3>
-                  <p class="text-[11px] text-slate-500">Unggah file CSV atau salin-tempel (Copy-Paste) baris data dari Microsoft Excel / Google Sheets.</p>
+                <div class="flex items-center gap-2.5">
+                  <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-base">
+                    <i class="fa-solid fa-file-excel"></i>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-slate-800 text-base">Import Data Siswa Massal (Excel / CSV)</h3>
+                    <p class="text-[11px] text-slate-500">Unggah file Excel (.xlsx / .xls), file CSV, atau salin-tempel baris data dari Microsoft Excel / Google Sheets.</p>
+                  </div>
                 </div>
                 <button onclick="window.app.toggleImportSiswaModal(false)" class="text-slate-400 hover:text-slate-700">
                   <i class="fa-solid fa-xmark text-lg"></i>
@@ -2580,28 +2658,41 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
               </div>
 
               <div class="space-y-4 text-xs">
-                <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-blue-900">
-                  <div class="font-bold mb-1">Format Urutan Kolom (Dipisahkan Koma <code class="bg-white px-1 rounded">,</code> atau Titik Koma <code class="bg-white px-1 rounded">;</code> atau Tab Excel):</div>
-                  <code class="block bg-white p-2 rounded border border-blue-100 font-mono text-[11px] text-slate-700">
-                    username, password, nama_lengkap, jenis_kelamin, tgl_lahir
-                  </code>
-                  <div class="mt-1.5 text-[11px] text-blue-700">
-                    Contoh: <code class="font-mono">pst001, 12345, Budi Santoso, Laki-Laki, 14-03-2011</code>
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-3.5 text-blue-900 space-y-2.5">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <div class="font-bold">1. Unduh Format Template Excel Siswa (.xlsx)</div>
+                      <p class="text-[11px] text-blue-700">Gunakan template resmi agar kolom Username, Password, Nama, L/P, dan Tanggal Lahir terbaca otomatis.</p>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="window.app.downloadTemplateSiswaExcel()"
+                      class="bg-[#0066FF] hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl font-semibold flex items-center gap-1.5 shadow-xs shrink-0 transition"
+                    >
+                      <i class="fa-solid fa-download"></i>
+                      <span>Unduh Template .xlsx</span>
+                    </button>
+                  </div>
+                  <div class="pt-2 border-t border-blue-200/70">
+                    <div class="font-semibold text-[11px] mb-1">Urutan Kolom (Excel / CSV / Copy-Paste):</div>
+                    <code class="block bg-white p-2 rounded border border-blue-100 font-mono text-[11px] text-slate-700">
+                      username, password, nama_lengkap, jenis_kelamin, tgl_lahir
+                    </code>
                   </div>
                 </div>
 
                 <div>
-                  <label class="block font-semibold text-slate-700 mb-1">1. Pilih File CSV dari Komputer (Opsional):</label>
+                  <label class="block font-semibold text-slate-700 mb-1">2. Pilih File Excel (.xlsx / .xls) atau CSV dari Komputer:</label>
                   <input
                     type="file"
-                    accept=".csv,.txt"
+                    accept=".xlsx,.xls,.csv,.txt"
                     onchange="window.app.handleCSVFileSelect(event)"
-                    class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    class="w-full text-xs file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 border border-slate-200 rounded-xl p-1.5"
                   />
                 </div>
 
                 <div>
-                  <label class="block font-semibold text-slate-700 mb-1">2. Atau Paste Data Baris Siswa di Bawah Ini:</label>
+                  <label class="block font-semibold text-slate-700 mb-1">3. Pratinjau / Edit atau Paste Langsung Data Baris Siswa di Bawah Ini:</label>
                   <textarea
                     id="import-siswa-raw"
                     rows="6"
@@ -2906,6 +2997,22 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
     const pgkCheckedKeys = editingSoal && editingSoal.jenis_soal === 'PGK'
       ? editingSoal.kunci_jawaban.split(',').map(x => x.trim().toUpperCase()).filter(Boolean)
       : ['A'];
+    const mjKeys = editingSoal && editingSoal.jenis_soal === 'MJ'
+      ? editingSoal.kunci_jawaban.split(',').map(x => x.trim().toUpperCase())
+      : ['A', 'B', 'C', 'D', 'E'];
+    const mjSplitRows = ['opsi_a', 'opsi_b', 'opsi_c', 'opsi_d', 'opsi_e'].map((prop, idx) => {
+      const raw = (editingSoal && editingSoal.jenis_soal === 'MJ') ? (editingSoal[prop] || '') : '';
+      const parts = raw.split('||');
+      const letter = String.fromCharCode(65 + idx);
+      return {
+        id: ['a', 'b', 'c', 'd', 'e'][idx],
+        letter,
+        kiri: (parts[0] || '').trim(),
+        kanan: (parts[1] || '').trim(),
+        kunci: mjKeys[idx] || letter,
+        req: idx < 2
+      };
+    });
 
     return `
       <div class="space-y-5">
@@ -3208,6 +3315,7 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                         <option value="PG" ${currentJenis === 'PG' ? 'selected' : ''}>PG Biasa (1 Jawaban)</option>
                         <option value="PGK" ${currentJenis === 'PGK' ? 'selected' : ''}>PG Kompleks (Kotak Ceklis)</option>
                         <option value="BS" ${currentJenis === 'BS' ? 'selected' : ''}>Benar / Salah (Multi Pernyataan)</option>
+                        <option value="MJ" ${currentJenis === 'MJ' ? 'selected' : ''}>Menjodohkan (Pasangan Pernyataan)</option>
                       </select>
                     </div>
                     <div>
@@ -3218,7 +3326,7 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
 
                   <div>
                     <label class="block font-semibold text-slate-600 mb-1">Pertanyaan Pokok Soal</label>
-                    <textarea id="q-tanya" rows="2" required placeholder="Contoh: Mengapa penulis meletakkan gambar sebelum paragraf terakhir dalam cerita?" class="w-full p-3 rounded-xl border border-slate-200">${editingSoal ? editingSoal.pertanyaan : ''}</textarea>
+                    <textarea id="q-tanya" rows="2" required placeholder="${currentJenis === 'MJ' ? 'Contoh: Pasangkan pernyataan di lajur kiri dengan pasangan jawaban yang tepat di lajur kanan berdasarkan teks!' : 'Contoh: Mengapa penulis meletakkan gambar sebelum paragraf terakhir dalam cerita?'}" class="w-full p-3 rounded-xl border border-slate-200">${editingSoal ? editingSoal.pertanyaan : ''}</textarea>
                   </div>
 
                   ${currentJenis === 'BS' ? `
@@ -3251,6 +3359,89 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                           </select>
                         </div>
                       `).join('')}
+                    </div>
+                  ` : currentJenis === 'MJ' ? `
+                    <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-2.5">
+                      <div class="flex flex-wrap items-center justify-between gap-2 pb-1.5 border-b border-amber-200">
+                        <div>
+                          <span class="text-[11px] font-bold text-amber-900 block">Pengaturan Pasangan & Kunci Jawaban Menjodohkan</span>
+                          <span class="text-[10px] text-amber-700">Isi Lajur Kiri (1-5), Lajur Kanan (A-E), lalu pilih huruf Kunci Jawaban di sebelah kanan.</span>
+                        </div>
+                        <button
+                          type="button"
+                          onclick="window.app.fillContohSoalMenjodohkan()"
+                          class="bg-amber-500 hover:bg-amber-600 text-slate-950 px-2.5 py-1 rounded-lg text-[10px] font-bold flex items-center gap-1 shadow-xs transition"
+                          title="Isi otomatis contoh soal menjodohkan beserta kunci acak ke dalam form"
+                        >
+                          <i class="fa-solid fa-wand-magic-sparkles"></i>
+                          <span>Isi Contoh Soal</span>
+                        </button>
+                      </div>
+
+                      <!-- Panduan Contoh Soal Menjodohkan -->
+                      <div class="bg-white/90 border border-amber-200/80 rounded-lg p-2.5 text-[10px] text-slate-600 space-y-1">
+                        <div class="font-bold text-amber-900 flex items-center gap-1">
+                          <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                          <span>Contoh Pengisian & Setting Kunci Jawaban (Urutan Lajur Kanan Bisa Diacak):</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-1 text-slate-700">
+                          <div><strong>1.</strong> Sapu lidi | <strong>A.</strong> Membersihkan debu <span class="text-emerald-700 font-bold">(Kunci 1→B)</span></div>
+                          <div><strong>2.</strong> Kain pel | <strong>B.</strong> Menyapu halaman <span class="text-emerald-700 font-bold">(Kunci 2→C)</span></div>
+                          <div><strong>3.</strong> Kemoceng | <strong>C.</strong> Membersihkan lantai <span class="text-emerald-700 font-bold">(Kunci 3→A)</span></div>
+                        </div>
+                      </div>
+
+                      <!-- Header Kolom -->
+                      <div class="hidden md:grid md:grid-cols-12 gap-2 text-[10px] font-bold text-amber-900 px-1 pt-0.5">
+                        <div class="md:col-span-5">Lajur Kiri (Pernyataan 1-5)</div>
+                        <div class="md:col-span-5">Lajur Kanan (Pilihan Opsi A-E)</div>
+                        <div class="md:col-span-2 text-center">Kunci Jawaban</div>
+                      </div>
+
+                      ${mjSplitRows.map((row, rIdx) => {
+                        const contohKiri = ['Contoh: Sapu lidi', 'Contoh: Kain pel', 'Contoh: Kemoceng', 'Pernyataan 4 (Opsional)', 'Pernyataan 5 (Opsional)'][rIdx];
+                        const contohKanan = ['Opsi A (Misal: Membersihkan debu)', 'Opsi B (Misal: Menyapu halaman)', 'Opsi C (Misal: Membersihkan lantai)', 'Opsi D (Opsional / Pengecoh)', 'Opsi E (Opsional / Pengecoh)'][rIdx];
+                        return `
+                          <div class="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                            <div class="md:col-span-5 flex items-center gap-1.5">
+                              <span class="w-5 text-center font-bold text-amber-800 shrink-0">${rIdx + 1}.</span>
+                              <input
+                                type="text"
+                                id="q-mj-kiri-${row.id}"
+                                ${row.req ? 'required' : ''}
+                                value="${row.kiri}"
+                                placeholder="${contohKiri}"
+                                class="w-full px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white"
+                              />
+                            </div>
+                            <div class="md:col-span-5 flex items-center gap-1.5">
+                              <span class="w-5 text-center font-bold text-blue-700 shrink-0">${row.letter}.</span>
+                              <input
+                                type="text"
+                                id="q-mj-kanan-${row.id}"
+                                ${row.req ? 'required' : ''}
+                                value="${row.kanan}"
+                                placeholder="${contohKanan}"
+                                class="w-full px-2.5 py-1.5 rounded-lg border border-amber-300 bg-white font-medium text-slate-800"
+                              />
+                            </div>
+                            <div class="md:col-span-2">
+                              <select
+                                id="q-mj-key-${row.id}"
+                                title="Pilih huruf Lajur Kanan (A-E) sebagai kunci jawaban untuk Pernyataan ${rIdx + 1}"
+                                class="w-full px-2 py-1.5 rounded-lg border border-emerald-400 bg-emerald-50 font-bold text-emerald-800 text-xs text-center cursor-pointer"
+                              >
+                                ${['A', 'B', 'C', 'D', 'E'].map(optCode => `
+                                  <option value="${optCode}" ${row.kunci === optCode ? 'selected' : ''}>${rIdx + 1} → ${optCode}</option>
+                                `).join('')}
+                              </select>
+                            </div>
+                          </div>
+                        `;
+                      }).join('')}
+                      <p class="text-[10px] text-amber-800 pt-1">
+                        <i class="fa-solid fa-circle-info mr-1"></i>Atur pasangan kunci secara bebas pada kolom <strong>Kunci Jawaban</strong> (misal <strong>1 → B</strong>, <strong>2 → C</strong>, <strong>3 → A</strong>). Anda juga dapat mengisi Lajur Kanan saja (tanpa Lajur Kiri) pada baris 4 atau 5 sebagai opsi pengecoh.
+                      </p>
                     </div>
                   ` : `
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -3310,20 +3501,53 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
                             ? 'bg-purple-100 text-purple-700'
                             : bs.jenis_soal === 'BS'
                               ? 'bg-emerald-100 text-emerald-700'
-                              : 'bg-blue-100 text-blue-700'
+                              : bs.jenis_soal === 'MJ'
+                                ? 'bg-amber-100 text-amber-800'
+                                : 'bg-blue-100 text-blue-700'
                         }">
-                          ${bs.jenis_soal === 'PGK' ? 'PG Kompleks (Ceklis)' : bs.jenis_soal === 'BS' ? 'Benar / Salah' : 'PG Biasa'}
+                          ${bs.jenis_soal === 'PGK' ? 'PG Kompleks (Ceklis)' : bs.jenis_soal === 'BS' ? 'Benar / Salah' : bs.jenis_soal === 'MJ' ? 'Menjodohkan' : 'PG Biasa'}
                         </span>
                         <span class="text-emerald-700 font-semibold">Kunci: ${bs.kunci_jawaban}</span>
                         <span class="text-slate-400">• Bobot: ${bs.bobot}</span>
                       </div>
                       <p class="text-slate-700 font-medium">${bs.pertanyaan}</p>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-1 text-[11px] text-slate-500 pt-1">
-                        ${bs.opsi_a ? `<div>1/A. ${bs.opsi_a}</div>` : ''}
-                        ${bs.opsi_b ? `<div>2/B. ${bs.opsi_b}</div>` : ''}
-                        ${bs.opsi_c ? `<div>3/C. ${bs.opsi_c}</div>` : ''}
-                        ${bs.opsi_d ? `<div>4/D. ${bs.opsi_d}</div>` : ''}
-                        ${bs.opsi_e ? `<div>5/E. ${bs.opsi_e}</div>` : ''}
+                        ${bs.jenis_soal === 'MJ' ? `
+                          ${(() => {
+                            const rawPairs = [
+                              { idx: 1, code: 'A', val: bs.opsi_a },
+                              { idx: 2, code: 'B', val: bs.opsi_b },
+                              { idx: 3, code: 'C', val: bs.opsi_c },
+                              { idx: 4, code: 'D', val: bs.opsi_d },
+                              { idx: 5, code: 'E', val: bs.opsi_e }
+                            ].filter(x => x.val);
+                            const kananMap = {};
+                            rawPairs.forEach(x => {
+                              const p = x.val.split('||');
+                              if ((p[1] || '').trim()) kananMap[x.code] = (p[1] || '').trim();
+                            });
+                            const kunciArr = String(bs.kunci_jawaban || '').split(',').map(k => k.trim().toUpperCase());
+                            let leftCounter = 0;
+                            return rawPairs.map(x => {
+                              const p = x.val.split('||');
+                              const kiriTeks = (p[0] || '').trim();
+                              const kananTeks = (p[1] || '').trim();
+                              if (kiriTeks) {
+                                const kCode = kunciArr[leftCounter] || x.code;
+                                leftCounter += 1;
+                                const matchedRight = kananMap[kCode] || kananTeks || '-';
+                                return `<div class="md:col-span-2 bg-white px-2.5 py-1 rounded border border-amber-200/70 text-slate-700"><strong>${leftCounter}.</strong> ${kiriTeks} <span class="text-emerald-700 font-bold mx-1">→ Kunci ${kCode}:</span> ${matchedRight}</div>`;
+                              }
+                              return `<div class="md:col-span-2 bg-slate-100/80 px-2.5 py-1 rounded border border-slate-200 text-slate-500 italic">Opsi Pengecoh <strong>${x.code}.</strong> ${kananTeks}</div>`;
+                            }).join('');
+                          })()}
+                        ` : `
+                          ${bs.opsi_a ? `<div>1/A. ${bs.opsi_a}</div>` : ''}
+                          ${bs.opsi_b ? `<div>2/B. ${bs.opsi_b}</div>` : ''}
+                          ${bs.opsi_c ? `<div>3/C. ${bs.opsi_c}</div>` : ''}
+                          ${bs.opsi_d ? `<div>4/D. ${bs.opsi_d}</div>` : ''}
+                          ${bs.opsi_e ? `<div>5/E. ${bs.opsi_e}</div>` : ''}
+                        `}
                       </div>
                     </div>
                     <div class="flex items-center gap-1 shrink-0">
@@ -3668,6 +3892,22 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
         if (isAllCorrect && activeKeys.length > 0) {
           skorDiperoleh += bobot;
         }
+      } else if (q.jenis_soal === 'MJ') {
+        const activeLeftKeys = ['A', 'B', 'C', 'D', 'E'].filter(k => {
+          const prop = 'opsi_' + k.toLowerCase();
+          const raw = q[prop] || '';
+          const kiri = raw.split('||')[0]?.trim() || '';
+          return kiri !== '';
+        });
+        const kunciArr = q.kunci_jawaban.split(',').map(k => k.trim().toUpperCase());
+        const isAllMatched = activeLeftKeys.every((k, idx) => {
+          const expectedCode = kunciArr[idx] || k;
+          const actualCode = (ans && typeof ans === 'object') ? String(ans[k] || '').trim().toUpperCase() : '';
+          return actualCode === expectedCode;
+        });
+        if (isAllMatched && activeLeftKeys.length > 0) {
+          skorDiperoleh += bobot;
+        }
       } else if (q.jenis_soal === 'PGK') {
         const kunciArr = q.kunci_jawaban.split(',').map(k => k.trim().toUpperCase()).filter(Boolean).sort();
         const siswaArr = (Array.isArray(ans) ? ans : [ans]).map(k => k.trim().toUpperCase()).sort();
@@ -3919,6 +4159,17 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
       curr[statementKey] = val;
       state.exam.jawaban[soalId] = curr;
       syncStudentLiveProgress('Sedang Mengerjakan', `Menjawab pernyataan Soal No. ${state.exam.activeSoalIndex + 1}`);
+      render();
+    },
+
+    selectMJAnswer(soalId, pairKey, targetCode) {
+      const curr = (state.exam.jawaban[soalId] && typeof state.exam.jawaban[soalId] === 'object' && !Array.isArray(state.exam.jawaban[soalId]))
+        ? { ...state.exam.jawaban[soalId] }
+        : {};
+      if (targetCode) curr[pairKey] = targetCode;
+      else delete curr[pairKey];
+      state.exam.jawaban[soalId] = curr;
+      syncStudentLiveProgress('Sedang Mengerjakan', `Memasangkan jawaban Soal Menjodohkan No. ${state.exam.activeSoalIndex + 1}`);
       render();
     },
 
@@ -4237,13 +4488,94 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
       render();
     },
 
+    downloadTemplateSiswaExcel() {
+      if (!window.XLSX) {
+        return showToast('Library Excel (SheetJS) belum termuat, periksa koneksi internet Anda.', 'error');
+      }
+      const rows = [
+        {
+          username: 'pst001',
+          password: '12345',
+          nama_lengkap: 'Ahmad Fauzi',
+          jenis_kelamin: 'Laki-Laki',
+          tgl_lahir: '12-04-2011'
+        },
+        {
+          username: 'pst002',
+          password: '12345',
+          nama_lengkap: 'Citra Lestari',
+          jenis_kelamin: 'Perempuan',
+          tgl_lahir: '25-09-2011'
+        }
+      ];
+
+      const ws = window.XLSX.utils.json_to_sheet(rows);
+      ws['!cols'] = [
+        { wch: 16 },
+        { wch: 14 },
+        { wch: 30 },
+        { wch: 16 },
+        { wch: 16 }
+      ];
+      const wb = window.XLSX.utils.book_new();
+      window.XLSX.utils.book_append_sheet(wb, ws, 'Template_Siswa');
+      window.XLSX.writeFile(wb, 'Template_Import_Siswa_PUSMENDIK.xlsx');
+      showToast('Template Excel Siswa (.xlsx) berhasil diunduh!', 'success');
+    },
+
     handleCSVFileSelect(e) {
       const file = e.target.files?.[0];
       if (!file) return;
+
+      const fileName = file.name.toLowerCase();
+      const area = document.getElementById('import-siswa-raw');
+
+      if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
+        if (!window.XLSX) {
+          return showToast('Library Excel (SheetJS) belum termuat!', 'error');
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          try {
+            const data = new Uint8Array(ev.target.result);
+            const workbook = window.XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const json = window.XLSX.utils.sheet_to_json(sheet, { defval: '', raw: false });
+
+            const lines = [];
+            json.forEach(r => {
+              const uname = String(r.username || r.Username || r.USERNAME || r['No Peserta'] || '').trim();
+              const pass = String(r.password || r.Password || r.PASSWORD || '12345').trim();
+              const nama = String(r.nama_lengkap || r['Nama Lengkap'] || r.Nama || r.nama || r['Nama Peserta'] || '').trim();
+              const jkRaw = String(r.jenis_kelamin || r['Jenis Kelamin'] || r['L/P'] || r.JK || 'Laki-Laki').trim();
+              const jk = jkRaw.toLowerCase().startsWith('p') ? 'Perempuan' : 'Laki-Laki';
+              const tgl = String(r.tgl_lahir || r['Tgl Lahir'] || r['Tanggal Lahir'] || '15-05-2011').trim();
+
+              if (uname && nama) {
+                lines.push(`${uname}\t${pass}\t${nama}\t${jk}\t${tgl}`);
+              }
+            });
+
+            if (lines.length === 0) {
+              showToast('Tidak ditemukan baris data siswa yang valid pada file Excel!', 'warning');
+              return;
+            }
+
+            if (area) area.value = lines.join('\n');
+            showToast(`Berhasil membaca ${lines.length} data siswa dari Excel! Klik "Proses Import Siswa" untuk menyimpan.`, 'success');
+          } catch (err) {
+            showToast('Gagal membaca file Excel: ' + err.message, 'error');
+          }
+        };
+        reader.readAsArrayBuffer(file);
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const area = document.getElementById('import-siswa-raw');
         if (area) area.value = ev.target.result || '';
+        showToast('File CSV berhasil dimuat. Klik "Proses Import Siswa" untuk menyimpan.', 'info');
       };
       reader.readAsText(file);
     },
@@ -4587,17 +4919,40 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
       if (tanyaEl && tanyaVal) tanyaEl.value = tanyaVal;
     },
 
+    fillContohSoalMenjodohkan() {
+      const tanyaEl = document.getElementById('q-tanya');
+      if (tanyaEl) {
+        tanyaEl.value = 'Pasangkan alat kebersihan di lajur kiri dengan kegunaan yang tepat di lajur kanan!';
+      }
+      const contohPasangan = [
+        { id: 'a', kiri: 'Sapu lidi', kanan: 'Membersihkan debu di meja', key: 'B' },
+        { id: 'b', kiri: 'Kain pel', kanan: 'Menyapu halaman sekolah', key: 'C' },
+        { id: 'c', kiri: 'Kemoceng', kanan: 'Membersihkan lantai kelas', key: 'A' },
+        { id: 'd', kiri: '', kanan: 'Menyiram tanaman di taman', key: 'D' },
+        { id: 'e', kiri: '', kanan: '', key: 'E' }
+      ];
+      contohPasangan.forEach(item => {
+        const elKiri = document.getElementById(`q-mj-kiri-${item.id}`);
+        const elKanan = document.getElementById(`q-mj-kanan-${item.id}`);
+        const elKey = document.getElementById(`q-mj-key-${item.id}`);
+        if (elKiri) elKiri.value = item.kiri;
+        if (elKanan) elKanan.value = item.kanan;
+        if (elKey) elKey.value = item.key;
+      });
+      showToast('Contoh soal Menjodohkan beserta kunci jawaban acak (1→B, 2→C, 3→A + opsi pengecoh D) berhasil diisikan!', 'success');
+    },
+
     async handleAddSoal(e) {
       e.preventDefault();
       const stim = state.stimulusList.find(st => st.id === state.selectedStimulusIdForBuilder);
       if (!stim) return showToast('Pilih atau simpan stimulus terlebih dahulu!', 'warning');
 
       const jenis = document.getElementById('q-jenis').value;
-      const opsiA = document.getElementById('q-a')?.value?.trim() || '';
-      const opsiB = document.getElementById('q-b')?.value?.trim() || '';
-      const opsiC = document.getElementById('q-c')?.value?.trim() || '';
-      const opsiD = document.getElementById('q-d')?.value?.trim() || '';
-      const opsiE = document.getElementById('q-e')?.value?.trim() || '';
+      let opsiA = document.getElementById('q-a')?.value?.trim() || '';
+      let opsiB = document.getElementById('q-b')?.value?.trim() || '';
+      let opsiC = document.getElementById('q-c')?.value?.trim() || '';
+      let opsiD = document.getElementById('q-d')?.value?.trim() || '';
+      let opsiE = document.getElementById('q-e')?.value?.trim() || '';
 
       let kunci = '';
       if (jenis === 'BS') {
@@ -4608,6 +4963,35 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
         if (opsiD) keys.push(document.getElementById('q-bs-key-d')?.value || 'B');
         if (opsiE) keys.push(document.getElementById('q-bs-key-e')?.value || 'S');
         kunci = keys.join(',');
+      } else if (jenis === 'MJ') {
+        const ids = ['a', 'b', 'c', 'd', 'e'];
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        const rowValues = [];
+        const availableRightCodes = new Set();
+        const selectedKeys = [];
+
+        ids.forEach((id, idx) => {
+          const kiri = document.getElementById(`q-mj-kiri-${id}`)?.value?.trim() || '';
+          const kanan = document.getElementById(`q-mj-kanan-${id}`)?.value?.trim() || '';
+          const chosenKey = (document.getElementById(`q-mj-key-${id}`)?.value || letters[idx]).trim().toUpperCase();
+          if (kanan) availableRightCodes.add(letters[idx]);
+          rowValues.push((kiri || kanan) ? `${kiri} || ${kanan}` : '');
+          if (kiri) selectedKeys.push({ no: idx + 1, key: chosenKey });
+        });
+
+        if (selectedKeys.length < 2 || availableRightCodes.size < 2) {
+          showToast('Isi minimal 2 pernyataan Lajur Kiri dan 2 pilihan Lajur Kanan untuk soal Menjodohkan!', 'warning');
+          return;
+        }
+
+        const invalidKey = selectedKeys.find(item => !availableRightCodes.has(item.key));
+        if (invalidKey) {
+          showToast(`Kunci Jawaban Pernyataan ${invalidKey.no} menunjuk ke Opsi ${invalidKey.key} yang masih kosong!`, 'error');
+          return;
+        }
+
+        [opsiA, opsiB, opsiC, opsiD, opsiE] = rowValues;
+        kunci = selectedKeys.map(item => item.key).join(',');
       } else if (jenis === 'PGK') {
         const checked = Array.from(document.querySelectorAll('input[name="q-pgk-kunci"]:checked')).map(cb => cb.value);
         if (checked.length === 0) {
@@ -4732,6 +5116,21 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
           Opsi_E: '',
           Kunci_Jawaban: 'S,B,B',
           Bobot: 10
+        },
+        {
+          No_Urut: 4,
+          Judul_Stimulus: 'KEBERSIHAN SEKOLAH',
+          Isi_Wacana: '',
+          URL_Gambar_Stimulus: '',
+          Jenis_Soal: 'MJ',
+          Pertanyaan: 'Pasangkan alat kebersihan di lajur kiri dengan kegunaannya di lajur kanan!',
+          Opsi_A: 'Sapu lidi || Menyapu halaman sekolah',
+          Opsi_B: 'Kain pel || Membersihkan lantai kelas',
+          Opsi_C: 'Kemoceng || Membersihkan debu di meja',
+          Opsi_D: '',
+          Opsi_E: '',
+          Kunci_Jawaban: 'A,B,C',
+          Bobot: 10
         }
       ];
 
@@ -4812,6 +5211,7 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
           let jenisSoal = 'PG';
           if (rawJenis.includes('PGK') || rawJenis.includes('KOMPLEKS')) jenisSoal = 'PGK';
           else if (rawJenis.includes('BS') || rawJenis.includes('BENAR')) jenisSoal = 'BS';
+          else if (rawJenis.includes('MJ') || rawJenis.includes('JODOH')) jenisSoal = 'MJ';
 
           const bobot = Number(r.Bobot || r['Bobot Poin']) || 10;
           const opsiA = String(r.Opsi_A || r['Opsi A'] || r.Pernyataan_1 || '').trim();
@@ -5092,4 +5492,3 @@ const SUPABASE_ANON_KEY = "sb_publishable__PA3hOgdd2cYoZsXFuHckg_A2yMZF-W";
 </script>
 </body>
 </html>
-Menampilkan konfigurasi_database_rls_supabase.sql.
